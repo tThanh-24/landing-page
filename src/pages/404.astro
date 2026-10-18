@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Not found" description="This page does not exist.">
+  <section class="shell flex min-h-[60vh] flex-col justify-center py-20">
+    <p class="font-mono text-xs text-[var(--fg-faint)]">404</p>
+    <h1 class="mt-4 text-4xl font-medium tracking-tight sm:text-5xl">
+      No such page.
+    </h1>
+    <p class="muted mt-5 max-w-md leading-relaxed">
+      The link may be outdated, or the page may have moved. The work is all
+      still here.
+    </p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 rounded-md bg-[var(--fg)] px-5 py-2.5 text-sm font-medium text-[var(--bg)] transition-opacity hover:opacity-85"
+      >
+        Back home
+      </a>
+      <a
+        href="/work"
+        class="inline-flex items-center gap-2 rounded-md border rule px-5 py-2.5 text-sm font-medium transition-colors hover:border-[var(--border-strong)]"
+      >
+        Browse work
+      </a>
+    </div>
+  </section>
+</BaseLayout>

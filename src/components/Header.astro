@@ -1,0 +1,46 @@
+---
+import { site } from "../data/site";
+import ThemeToggle from "./ThemeToggle.astro";
+
+export interface Props {
+  /** On the home page the hero already shows the name, so the header shows the domain instead. */
+  hideName?: boolean;
+}
+
+const { hideName = false } = Astro.props;
+
+const links = [
+  { href: "/#work", label: "Work" },
+  { href: "/#experience", label: "Experience" },
+  { href: "/#writing", label: "Writing" },
+  { href: "/#contact", label: "Contact" },
+];
+---
+
+<header
+  class="sticky top-0 z-40 border-b rule bg-[var(--bg)]/85 backdrop-blur-sm supports-[backdrop-filter]:bg-[var(--bg)]/70">
+  <div class="shell flex h-16 items-center justify-between gap-4">
+    <a
+      href="/"
+      class="font-mono text-sm tracking-tight whitespace-nowrap transition-opacity hover:opacity-70"
+    >
+      {hideName ? (Astro.site?.hostname ?? site.name) : site.name}
+    </a>
+
+    <div class="flex items-center gap-1 sm:gap-2">
+      <nav aria-label="Main" class="flex items-center">
+        {
+          links.map((link) => (
+            <a
+              href={link.href}
+              class="muted rounded px-1.5 py-1.5 text-xs transition-colors hover:text-[var(--fg)] sm:px-3 sm:text-sm"
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
+      <ThemeToggle />
+    </div>
+  </div>
+</header>

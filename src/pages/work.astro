@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Reveal from "../components/Reveal.astro";
+import ProjectEntry from "../components/ProjectEntry.astro";
+import Contact from "../components/Contact.astro";
+import { projects } from "../data/projects";
+
+const list = [...projects].sort((a, b) => b.year.localeCompare(a.year));
+---
+
+<BaseLayout
+  title="Work"
+  description="Projects: what they do, what they measure, and where the code lives."
+>
+  <section class="shell pt-16 sm:pt-20">
+    <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">Work</h1>
+    <p class="muted mt-5 max-w-xl text-base leading-relaxed">
+      A few things I have built. Each one lists what it actually does and, where
+      I could measure it, the numbers it moved.
+    </p>
+  </section>
+
+  <section class="shell mt-16">
+    {
+      list.length === 0 ? (
+        <p class="muted text-sm">Projects are on the way. Check back soon.</p>
+      ) : (
+        <div class="max-w-3xl space-y-16">
+          {list.map((project, index) => (
+            <Reveal delay={Math.min(index, 3) * 70}>
+              <ProjectEntry project={project} />
+            </Reveal>
+          ))}
+        </div>
+      )
+    }
+  </section>
+
+  <div class="mt-20 sm:mt-28">
+    <Contact />
+  </div>
+</BaseLayout>

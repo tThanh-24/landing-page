@@ -1,0 +1,38 @@
+---
+import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { site } from "../data/site";
+
+/**
+ * Resolves at build time. Until you drop a file at public/<resumeFile>, the
+ * button renders as a disabled state rather than a broken download link.
+ */
+const resumePath = fileURLToPath(
+  new URL(`../../public/${site.resumeFile}`, import.meta.url),
+);
+const hasResume = existsSync(resumePath);
+---
+
+{
+  hasResume ? (
+    <a
+      href={`/${site.resumeFile}`}
+      download
+      class="inline-flex items-center gap-2 rounded-md border rule px-5 py-2.5 text-sm font-medium transition-colors hover:border-[var(--border-strong)]"
+    >
+      {site.resumeLabel}
+      <span aria-hidden="true" class="faint">
+        ↓
+      </span>
+    </a>
+  ) : (
+    <span
+      title="Add a PDF at public/{site.resumeFile} to enable this"
+      aria-disabled="true"
+      class="inline-flex cursor-not-allowed items-center gap-2 rounded-md border rule px-5 py-2.5 text-sm font-medium opacity-50"
+    >
+      {site.resumeLabel} <span aria-hidden="true">·</span>
+      <span class="text-xs">PDF coming soon</span>
+    </span>
+  )
+}

@@ -1,0 +1,45 @@
+---
+import { recentWriting } from "../data/writing";
+
+const entries = recentWriting(3);
+
+const formatDate = (iso: string) =>
+  new Date(iso + "T00:00:00").toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+  });
+---
+
+{
+  entries.length === 0 ? (
+    <p class="muted text-sm">
+      I write occasionally about what I build and what I get wrong. Nothing
+      published yet.
+    </p>
+  ) : (
+    <ul class="space-y-6">
+      {entries.map((entry) => (
+        <li class="group">
+          <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <a
+              href={entry.url}
+              class="link text-base font-medium"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {entry.title}
+            </a>
+            {entry.kind && <span class="tag">{entry.kind}</span>}
+            <time
+              datetime={entry.date}
+              class="faint font-mono text-xs"
+            >
+              {formatDate(entry.date)}
+            </time>
+          </div>
+          <p class="muted mt-1.5 text-sm leading-relaxed">{entry.blurb}</p>
+        </li>
+      ))}
+    </ul>
+  )
+}

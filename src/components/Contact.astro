@@ -1,0 +1,49 @@
+---
+import { site } from "../data/site";
+
+const mailto = `mailto:${site.email}?subject=${encodeURIComponent(site.emailSubject)}`;
+const socials = site.socials.filter((s) => s.label !== "Email");
+---
+
+<section id="contact" class="shell scroll-mt-24">
+  <div
+    class="rounded-xl border rule bg-[var(--bg-elevated)] px-6 py-10 sm:px-10 sm:py-14"
+  >
+    <p class="font-mono text-xs text-[var(--fg-faint)]">07 / Contact</p>
+    <h2 class="mt-4 max-w-2xl text-3xl font-medium tracking-tight sm:text-4xl">
+      Let's talk about what you'd like to build.
+    </h2>
+    <p class="muted mt-4 max-w-xl text-sm leading-relaxed">
+      I read every message. If you're hiring or scouting, a note about the role
+      or the team is more useful to me than a template — but either gets a
+      reply within a few days.
+    </p>
+
+    <div class="mt-8 flex flex-wrap items-center gap-3">
+      <a
+        href={mailto}
+        class="inline-flex items-center gap-2 rounded-md bg-[var(--fg)] px-5 py-2.5 text-sm font-medium text-[var(--bg)] transition-opacity hover:opacity-85"
+      >
+        Email me
+        <span aria-hidden="true">→</span>
+      </a>
+      {
+        socials.map((social) => (
+          <a
+            href={social.href}
+            class="inline-flex items-center gap-2 rounded-md border rule px-5 py-2.5 text-sm font-medium transition-colors hover:border-[var(--border-strong)]"
+            target={social.href.startsWith("http") ? "_blank" : undefined}
+            rel={social.href.startsWith("http") ? "me noopener" : undefined}
+          >
+            {social.label}
+            <span aria-hidden="true" class="faint">
+              ↗
+            </span>
+          </a>
+        ))
+      }
+    </div>
+
+    <p class="faint mt-6 font-mono text-xs">{site.email}</p>
+  </div>
+</section>

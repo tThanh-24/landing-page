@@ -1,0 +1,141 @@
+---
+import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ResumeButton from "../components/ResumeButton.astro";
+import { site } from "../data/site";
+import { experience } from "../data/experience";
+import { skillGroups } from "../data/skills";
+import { projects } from "../data/projects";
+
+const resumePath = fileURLToPath(
+  new URL(`../../public/${site.resumeFile}`, import.meta.url),
+);
+const hasResume = existsSync(resumePath);
+---
+
+<BaseLayout
+  title="Résumé"
+  description={`Résumé of ${site.fullName} — ${site.degree}.`}
+>
+  <section class="shell pt-16 sm:pt-20">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div>
+        <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">
+          {site.fullName}
+        </h1>
+        <p class="muted mt-3 text-sm">{site.degree}</p>
+      </div>
+      <ResumeButton />
+    </div>
+
+    {
+      !hasResume && (
+        <p class="mt-6 rounded-lg border rule bg-[var(--bg-elevated)] px-4 py-3 text-sm muted">
+          This page is the readable version. Drop your PDF at{" "}
+          <code class="font-mono text-[var(--fg)]">public/{site.resumeFile}</code>{" "}
+          and the download button above will activate.
+        </p>
+      )
+    }
+  </section>
+
+  <section class="shell mt-14 max-w-3xl space-y-12">
+    <div>
+      <h2 class="border-b rule pb-3 text-sm font-medium tracking-tight uppercase">
+        Experience
+      </h2>
+      <ol class="mt-6 space-y-8">
+        {
+          experience.map((entry) => (
+            <li class="grid gap-2 md:grid-cols-[11rem_1fr] md:gap-8">
+              <p class="font-mono text-xs text-[var(--fg-faint)]">
+                {entry.period}
+              </p>
+              <div>
+                <h3 class="text-base font-medium tracking-tight">
+                  {entry.role}
+                  <span class="muted font-normal"> · {entry.org}</span>
+                </h3>
+                {entry.location && (
+                  <p class="faint mt-0.5 text-xs">{entry.location}</p>
+                )}
+                <ul class="mt-2 space-y-1.5">
+                  {entry.points.map((point) => (
+                    <li class="muted flex gap-3 text-sm leading-relaxed">
+                      <span aria-hidden="true" class="faint select-none">
+                        —
+                      </span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <div>
+      <h2 class="border-b rule pb-3 text-sm font-medium tracking-tight uppercase">
+        Projects
+      </h2>
+      <ul class="mt-6 space-y-3">
+        {
+          projects.map((project) => (
+            <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <a
+                href={`/work#${project.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                class="link text-sm font-medium"
+              >
+                {project.title}
+              </a>
+              <span class="faint font-mono text-xs">{project.year}</span>
+              <span class="muted w-full text-sm sm:w-auto">{project.blurb}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="border-b rule pb-3 text-sm font-medium tracking-tight uppercase">
+        Skills
+      </h2>
+      <dl class="mt-6 space-y-4">
+        {skillGroups.map((group) => (
+          <div class="grid gap-1 md:grid-cols-[11rem_1fr] md:gap-8">
+            <dt class="font-mono text-xs text-[var(--fg-faint)]">
+              {group.label}
+            </dt>
+            <dd class="text-sm leading-relaxed">{group.items.join(" · ")}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <div>
+      <h2 class="border-b rule pb-3 text-sm font-medium tracking-tight uppercase">
+        Links
+      </h2>
+      <ul class="mt-6 space-y-2">
+        {
+          site.socials.map((social) => (
+            <li class="flex flex-wrap items-baseline gap-x-3">
+              <span class="muted w-24 text-sm">{social.label}</span>
+              <a
+                href={social.href}
+                class="link text-sm"
+                target={social.href.startsWith("http") ? "_blank" : undefined}
+                rel={social.href.startsWith("http") ? "noopener" : undefined}
+              >
+                {social.handle}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

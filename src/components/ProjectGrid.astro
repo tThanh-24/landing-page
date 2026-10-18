@@ -1,0 +1,45 @@
+---
+import { projects } from "../data/projects";
+
+export interface Props {
+  emptyMessage?: string;
+}
+
+const { emptyMessage } = Astro.props;
+const list = [...projects].sort((a, b) => b.year.localeCompare(a.year));
+const slug = (title: string) => title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+---
+
+{
+  list.length === 0 ? (
+    <p class="muted text-sm">
+      {emptyMessage ?? "Projects are on the way. Check back soon."}
+    </p>
+  ) : (
+    <ul class="grid gap-4 sm:gap-5 md:grid-cols-2">
+      {list.map((project) => (
+        <li>
+          <a
+            href={`/work#${slug(project.title)}`}
+            class="group block h-full rounded-lg border rule bg-[var(--bg-elevated)] p-5 transition-colors hover:border-[var(--border-strong)] sm:p-6"
+          >
+            <div class="flex items-baseline justify-between gap-4">
+              <h3 class="text-lg font-medium tracking-tight group-hover:text-[var(--color-accent)]">
+                {project.title}
+              </h3>
+              <span class="faint shrink-0 font-mono text-xs">
+                {project.year}
+              </span>
+            </div>
+            <p class="muted mt-2 text-sm leading-relaxed">{project.blurb}</p>
+            <ul class="mt-4 flex flex-wrap gap-1.5">
+              {project.tags.map((tag) => (
+                <li class="tag">{tag}</li>
+              ))}
+            </ul>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

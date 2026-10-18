@@ -1,0 +1,83 @@
+---
+import { site } from "../data/site";
+
+const phrases = [...site.rotatingRoles];
+---
+
+<p class="text-lg leading-relaxed sm:text-xl">
+  <span class="muted">I work on </span>
+  <span class="relative inline-block align-baseline">
+    <span
+      data-typewriter-target
+      data-phrases={JSON.stringify(phrases)}
+      class="font-medium text-[var(--color-accent)]">{phrases[0]}</span
+    ><span
+      data-typewriter-caret
+      class="ml-0.5 inline-block h-[1.1em] w-px translate-y-[0.15em] bg-[var(--color-accent)] align-baseline"
+      aria-hidden="true"></span>
+    <span class="sr-only">{phrases.join(", ")}</span>
+  </span>
+  <span class="muted"> — mostly in the low level, occasionally at the edges.</span>
+</p>
+
+<script>
+  const TYPE_MS = 55;
+  const DELETE_MS = 28;
+  const HOLD_MS = 1600;
+  const SWAP_MS = 320;
+
+  function run() {
+    const target = document.querySelector<HTMLElement>("[data-typewriter-target]");
+    const caret = document.querySelector("[data-typewriter-caret]");
+
+    // Already initialized (client navigation back to this page), or missing.
+    if (!target || !caret || target.dataset.ready === "true") return;
+    const el: HTMLElement = target;
+
+    let phrases: string[] = [];
+    try {
+      phrases = JSON.parse(el.dataset.phrases ?? "[]");
+    } catch {
+      phrases = [];
+    }
+    if (phrases.length === 0) return;
+
+    el.dataset.ready = "true";
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+    if (reduceMotion.matches) {
+      el.textContent = phrases[0];
+      caret.remove();
+      return;
+    }
+
+    let index = 0;
+    let chars = 0;
+    let deleting = false;
+
+    function tick() {
+      const current = phrases[index];
+      chars += deleting ? -1 : 1;
+      el.textContent = current.slice(0, chars);
+
+      let delay = deleting ? DELETE_MS : TYPE_MS;
+      if (!deleting && chars === current.length) {
+        deleting = true;
+        delay = HOLD_MS;
+      } else if (deleting && chars === 0) {
+        deleting = false;
+        index = (index + 1) % phrases.length;
+        delay = SWAP_MS;
+      }
+
+      window.setTimeout(tick, delay);
+    }
+
+    tick();
+  }
+
+  run();
+  document.addEventListener("astro:page-load", run);
+</script>

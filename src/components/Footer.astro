@@ -1,0 +1,50 @@
+---
+import { site } from "../data/site";
+
+const year = new Date().getFullYear();
+
+const socials = site.socials.filter((s) => s.href);
+---
+
+<footer class="mt-24 border-t rule">
+  <div class="shell py-10">
+    <div class="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
+      <div class="max-w-sm">
+        <p class="text-sm font-medium">Let's build something worth shipping.</p>
+        <p class="muted mt-2 text-sm">
+          I'm open to software engineering internships and full-time roles.
+        </p>
+        <a
+          href={`mailto:${site.email}?subject=${encodeURIComponent(site.emailSubject)}`}
+          class="link mt-3 inline-block text-sm"
+        >
+          {site.email}
+        </a>
+      </div>
+
+      <ul class="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+        {
+          socials.map((social) => (
+            <li>
+              <a
+                href={social.href}
+                class="muted transition-colors hover:text-[var(--fg)]"
+                rel={social.href.startsWith("http") ? "me noopener" : undefined}
+                target={social.href.startsWith("http") ? "_blank" : undefined}
+              >
+                {social.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div
+      class="mt-10 flex flex-col gap-2 border-t rule pt-6 text-xs sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p class="faint">© {year} {site.fullName}</p>
+      <p class="faint">Built with Astro + Tailwind CSS</p>
+    </div>
+  </div>
+</footer>

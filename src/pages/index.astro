@@ -1,0 +1,97 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import Reveal from "../components/Reveal.astro";
+import Typewriter from "../components/Typewriter.astro";
+import ProjectEntry from "../components/ProjectEntry.astro";
+import ExperienceList from "../components/ExperienceList.astro";
+import WritingList from "../components/WritingList.astro";
+import Contact from "../components/Contact.astro";
+import ResumeButton from "../components/ResumeButton.astro";
+import { site } from "../data/site";
+import { projects, featuredProjects } from "../data/projects";
+import { experience } from "../data/experience";
+import { writing } from "../data/writing";
+
+const hasProjects = projects.length > 0;
+const hasExperience = experience.length > 0;
+const hasWriting = writing.length > 0;
+
+const featured = featuredProjects().slice(0, 3);
+---
+
+<BaseLayout hideHeaderName>
+  <!-- Hero -->
+  <section class="shell pt-20 pb-16 sm:pt-28 sm:pb-24">
+    <p class="font-mono text-xs text-[var(--fg-faint)]">{site.degree}</p>
+    <h1 class="mt-5 text-4xl font-medium tracking-tight text-balance sm:text-6xl">
+      {site.name}
+    </h1>
+    <div class="mt-6 max-w-2xl">
+      <Typewriter />
+    </div>
+    <p class="muted mt-6 max-w-xl text-base leading-relaxed">
+      {site.tagline}
+    </p>
+
+    <div class="mt-8 flex flex-wrap items-center gap-3">
+      <a
+        href="#work"
+        class="inline-flex items-center gap-2 rounded-md bg-[var(--fg)] px-5 py-2.5 text-sm font-medium text-[var(--bg)] transition-opacity hover:opacity-85"
+      >
+        See my work
+        <span aria-hidden="true">↓</span>
+      </a>
+      <ResumeButton />
+    </div>
+  </section>
+
+  {
+    hasProjects && (
+      <div class="shell">
+        <Section
+          id="work"
+          eyebrow="01"
+          title="Selected work"
+          action={{ href: "/work", label: "All projects" }}
+        >
+          <div class="space-y-12">
+            {featured.map((project, index) => (
+              <Reveal delay={index * 80}>
+                <ProjectEntry project={project} />
+              </Reveal>
+            ))}
+          </div>
+        </Section>
+      </div>
+    )
+  }
+
+  {
+    hasExperience && (
+      <div class="shell mt-20 sm:mt-28">
+        <Section id="experience" eyebrow="02" title="Experience">
+          <Reveal>
+            <ExperienceList />
+          </Reveal>
+        </Section>
+      </div>
+    )
+  }
+
+  {
+    hasWriting && (
+      <div class="shell mt-20 sm:mt-28">
+        <Section id="writing" eyebrow="03" title="Writing">
+          <Reveal>
+            <WritingList />
+          </Reveal>
+        </Section>
+      </div>
+    )
+  }
+
+  <div class="mt-20 sm:mt-28">
+    <Contact />
+  </div>
+</BaseLayout>
